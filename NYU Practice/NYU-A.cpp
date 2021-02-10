@@ -3,30 +3,41 @@
 #include<iostream>
 using namespace std;
 
-int count_farey(int n);
+int phi(int n);
+void construct_farey(vector<int>& farey, int n);
 
 int main()
 {
 	int cases;
 	cin >> cases;
+	vector<int>farey;
+    farey.push_back(0);
+    farey.push_back(2);
 	for (int i = 0; i < cases; i++)
 	{
 		int k, n;
 		cin >> k >> n;
-		cout << k << " " << count_farey(n) << endl;
+        construct_farey(farey, n);
+		cout << k << " " << farey[n] << endl;
 	}
 }
-int count_farey(int n)
+void construct_farey(vector<int>& farey, int n)
 {
-	double x1 = 0, y1 = 1, x2 = 1, y2 = n;
-	double x, y = 0;
-	int count = 2;
-	while (y != 1.0)
-	{
-		x = floor((y1 + n) / y2) * x2 - y1;
-		y = floor((y1 + n) / y2) * y2 - y1;
-		x1 = x2, x2 = x, y1 = y2, y2 = y;
-		count++;
-	}
-	return count;
+    for (int i = farey.size(); i <= n; i++)
+    {
+        farey.push_back(farey.back() + phi(i));
+    }
+}
+int phi(int n) {
+    int result = n;
+    for (int i = 2; i * i <= n; i++) {
+        if (n % i == 0) {
+            while (n % i == 0)
+                n /= i;
+            result -= result / i;
+        }
+    }
+    if (n > 1)
+        result -= result / n;
+    return result;
 }
